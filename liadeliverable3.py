@@ -191,4 +191,107 @@ print()
 
 print("Three-way proportions: [gender, test prep] x lunch")
 print(pd.crosstab([ds["gender"], ds["test preparation course"]], ds["lunch"], normalize="index").round(2))
+
+#6: Multivariate graphical EDA
+
+#6.1: Visualizing statistical relationships
+
+# a) Faceting (using col parameter)
+sns.relplot(data=ds, x="math score", y="reading score", kind="scatter", col="gender")
+plt.show()
+
+# b) Five variables at once (x, y, hue, size, col)
+sns.relplot(data=ds, x="math score", y="writing score", hue="lunch", size="reading score", col="gender",kind="scatter")
+plt.show()
+
+# c) Linear regression
+sns.lmplot(data=ds, x="reading score", y="writing score", hue="gender")
+plt.show()
+
+#6.2: Visualizing categorical data
+
+# a) Categorical scatter (jitter disabled)
+# I picked gender vs math score to see if guys or girls do better
+sns.stripplot(data=ds, x="gender", y="math score", jitter=False)
+plt.title("Math score by gender")
+plt.xlabel("Gender")
+plt.ylabel("Math score")
+plt.show()
+
+# b) Beeswarm plot (3 variables)
+sns.swarmplot(data=ds, x="lunch", y="reading score", hue="gender")
+plt.title("Reading score by lunch and gender")
+plt.xlabel("Lunch")
+plt.ylabel("Reading score")
+plt.show()
+
+# c) Boxen plot
+sns.boxenplot(data=ds, x="race/ethnicity", y="math score")
+plt.title("Math score by race/ethnicity")
+plt.xlabel("Race/ethnicity")
+plt.ylabel("Math score")
+plt.show()
+
+# d) Split violin plot (3 variables)
+sns.violinplot(data=ds, x="lunch", y="writing score", hue="gender", split=True, bw=0.5, cut=0)
+plt.title("Writing score by lunch and gender")
+plt.xlabel("Lunch")
+plt.ylabel("Writing score")
+plt.show()
+
+# e) Violin plot with scatter points inside
+sns.violinplot(data=ds, x="gender", y="reading score", inner=None, cut=0)
+sns.stripplot(data=ds, x="gender", y="reading score", dodge=False, alpha=0.4)
+plt.title("Reading score by gender")
+plt.xlabel("Gender")
+plt.ylabel("Reading score")
+plt.show()
+
+# f) Point plot (3 variables, 90% CI, dashed lines)
+sns.pointplot(data=ds, x="parental level of education", y="math score",
+              hue="gender", ci=90, linestyles="--", dodge=True)
+plt.title("Math score by parental education and gender")
+plt.xlabel("Parental education")
+plt.ylabel("Math score")
+plt.show()
+
+# g) Bar plot showing number of observations
+sns.countplot(data=ds, x="race/ethnicity")
+plt.title("Count by race/ethnicity")
+plt.xlabel("Race/ethnicity")
+plt.ylabel("Count")
+plt.show()
+
+#6.3: Visualizing bivariate distributions
+
+# a) Heatmap plot
+plt.figure()
+sns.histplot( 
+    data=ds,
+    x="math score",
+    y="reading score",
+    bins=20,        # controls bin width (adjusted)
+    cbar=True,      # adds color intensity bar
+    cmap="Blues"    # color palette
+)
+plt.title("Heatmap of Math vs Reading scores")
+plt.xlabel("Math score")
+plt.ylabel("Reading score")
+plt.show()
+
+# b) Bivariate KDE (contour density plot)
+sns.displot(
+    data=ds,
+    x="math score",
+    y="writing score",
+    kind="kde",        # kernel density estimation
+    fill=True,         # fills contours
+    levels=8,          # number of contour lines
+    thresh=0.1,        # removes lowest-density outer layer
+    cmap="mako"        # color style
+)
+plt.title("Bivariate KDE of Math vs Writing scores")
+plt.xlabel("Math score")
+plt.ylabel("Writing score")
+plt.show()
  
